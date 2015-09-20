@@ -14,6 +14,8 @@ Configuration is achieved through a .env file in the root of the project. You sh
 your own. It should look like this: 
 
 ```
+PORT=8843
+PERMITTED_FILE_EXTENSIONS=mp3
 DEV_AWS_KEY=<key>
 DEV_AWS_SECRET=<secret>
 DEV_AWS_BUCKET=<bucket>
@@ -33,3 +35,17 @@ None. Help add some?
 ## RUNNING 
 
 You can start the signing service by simply executing `npm start`. The default port is 8843. 
+
+## GENERATING YOUR OWN SSL CERT
+
+Run this in `ssl_certs/<env>/`
+
+```
+openssl genrsa -out privatekey.pem 1024 
+openssl req -new -key privatekey.pem -out certrequest.csr 
+openssl x509 -req -in certrequest.csr -signkey privatekey.pem -out certificate.pem
+```
+
+## LICENSE
+
+MIT. 

@@ -6,22 +6,24 @@ var https = require('https');
 var fs    = require('fs');
 var path  = require('path');
 var env   = process.env.NODE_ENV || 'development';
-var port  = 8843;
+var port  = process.env.PORT;
 
 var ROOT_PATH = path.resolve(__dirname);
 
 var awsKey, awsSecret, awsBucket, httpsOpts;
 
 if(env.toLowerCase() === 'production') {
-  awsKey = process.env.PROD_AWS_KEY;
+  awsKey    = process.env.PROD_AWS_KEY;
   awsSecret = process.env.PROD_AWS_SECRET;
   awsBucket = process.env.PROD_AWS_BUCKET;
   httpsOpts = {
     key: fs.readFileSync(path.resolve(process.env.PROD_HTTPS_KEY_PATH), 'utf8'),
     cert: fs.readFileSync(path.resolve(process.env.PROD_HTTPS_CERT_PATH), 'utf8'),
+    requestCert: true,
+    rejectUnauthorized: false
   };
 } else if(env.toLowerCase() === 'development') {
-  awsKey = process.env.DEV_AWS_KEY;
+  awsKey    = process.env.DEV_AWS_KEY;
   awsSecret = process.env.DEV_AWS_SECRET;
   awsBucket = process.env.DEV_AWS_BUCKET;
   httpsOpts = {
@@ -35,7 +37,9 @@ if(env.toLowerCase() === 'production') {
 var signer = require('amazon-s3-url-signer').urlSigner(awsKey, awsSecret);
 
 function validPath(path) {
-  if(path.match(/^\//) && path.match(/.mp3$/)) {
+  var permittedExtensions = process.env.PERMITTED_FILE_EXTENSIONS.split(',').join('|')+'$';
+  var extensionRegex      = new RegExp(permittedExtensions,"ig");
+  if(path.match(/^\//) && path.match(extensionRegex)) {
     return true;
   } else {
     return false;
