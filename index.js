@@ -37,7 +37,7 @@ if(env.toLowerCase() === 'production') {
 var signer = require('amazon-s3-url-signer').urlSigner(awsKey, awsSecret);
 
 function validPath(path) {
-  var permittedExtensions = process.env.PERMITTED_FILE_EXTENSIONS.split(',').join('|')+'$';
+  var permittedExtensions = '(' + process.env.PERMITTED_FILE_EXTENSIONS.split(',').join('|')+')$';
   var extensionRegex      = new RegExp(permittedExtensions,"ig");
   if(path.match(/^\//) && path.match(extensionRegex)) {
     return true;
