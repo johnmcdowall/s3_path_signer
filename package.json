@@ -1,14 +1,14 @@
 {
   "name": "s3_path_signer",
   "version": "0.0.1",
-  "description": "",
+  "description": "A simple HTTPS server which generates signed Amazon S3 URLs.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "John McDowall <john@kantan.io> (http://kantan.io)",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "amazon-s3-url-signer": "0.0.7",
     "dotenv": "^1.2.0"
