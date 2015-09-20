@@ -34,7 +34,25 @@ if(env.toLowerCase() === 'production') {
 
 var signer = require('amazon-s3-url-signer').urlSigner(awsKey, awsSecret);
 
+function validPath(path) {
+  if(path.match(/^\//) && path.match(/.mp3$/)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function handleError(message, request, response) {
+  response.writeHead(500);
+  response.end(message);
+}
+
 function handleRequest(request, response){
+  if(!validPath(request.url)) {
+    handleError('PC LOAD LETTER', request, response);
+    return;
+  }
+
   var signedUrl = signer.getUrl('GET', request.url, awsBucket, 10);
   response.end(signedUrl);
 }
