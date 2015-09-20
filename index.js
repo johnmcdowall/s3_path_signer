@@ -2,15 +2,22 @@
 
 require('dotenv').load();
 
-var https = require('https');
-var fs    = require('fs');
-var path  = require('path');
-var env   = process.env.NODE_ENV || 'development';
-var port  = process.env.PORT;
+var https   = require('https');
+var fs      = require('fs');
+var path    = require('path');
+var winston = require('winston');
+var env     = process.env.NODE_ENV || 'development';
+var port    = process.env.PORT;
 
 var ROOT_PATH = path.resolve(__dirname);
 
 var awsKey, awsSecret, awsBucket, httpsOpts;
+
+var log = new (winston.Logger)({
+  transports: [
+    new (winston.transports.Console)({'timestamp':true})
+  ]
+});
 
 if(env.toLowerCase() === 'production') {
   awsKey    = process.env.PROD_AWS_KEY;
@@ -47,6 +54,7 @@ function validPath(path) {
 }
 
 function handleError(message, request, response) {
+  log.error('[x] ' + request.url);
   response.writeHead(500);
   response.end(message);
 }
@@ -57,7 +65,9 @@ function handleRequest(request, response){
     return;
   }
 
+  log.info('[√] ' + request.url);
   var signedUrl = signer.getUrl('GET', request.url, awsBucket, 10);
+  response.setHeader('Content-type', 'text/plain');
   response.end(signedUrl);
 }
 

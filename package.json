@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "amazon-s3-url-signer": "0.0.7",
-    "dotenv": "^1.2.0"
+    "dotenv": "^1.2.0",
+    "winston": "^1.0.1"
   }
 }
