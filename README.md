@@ -16,6 +16,8 @@ your own. It should look like this:
 ```
 PORT=8843
 PERMITTED_FILE_EXTENSIONS=mp3
+CORS_ALLOW_ORIGIN=localhost,my.domain.com
+CORS_ALLOW_METHODS=GET,PUT,POST
 DEV_AWS_KEY=<key>
 DEV_AWS_SECRET=<secret>
 DEV_AWS_BUCKET=<bucket>

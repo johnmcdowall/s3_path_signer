@@ -59,15 +59,27 @@ function handleError(message, request, response) {
   response.end(message);
 }
 
+function checkCorsOrigin(request, response) {
+  var origin = request.headers.host;
+  var permittedOrigins = process.env.CORS_ALLOW_ORIGIN.split(',');
+
+  if( permittedOrigins.indexOf(origin) >= 0 ) {
+    response.setHeader('Access-Control-Allow-Origin', origin);
+    response.setHeader('Access-Control-Allow-Methods', process.env.CORS_ALLOW_METHODS);
+  }
+}
+
 function handleRequest(request, response){
   if(!validPath(request.url)) {
     handleError('PC LOAD LETTER', request, response);
     return;
   }
 
+  response.setHeader('Content-type', 'text/plain');
+  checkCorsOrigin(request, response);
+
   log.info('[√] ' + request.url);
   var signedUrl = signer.getUrl('GET', request.url, awsBucket, 10);
-  response.setHeader('Content-type', 'text/plain');
   response.end(signedUrl);
 }
 
